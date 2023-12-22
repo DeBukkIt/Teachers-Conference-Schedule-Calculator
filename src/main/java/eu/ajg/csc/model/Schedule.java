@@ -26,6 +26,29 @@ public class Schedule {
 		this.conferences = new ArrayList<>();
 		this.conferences.addAll(conferences);
 	}
+	
+	public boolean parallelizeConferences() {
+		ArrayList<Conference> conferencesToRemoveAfterwards = new ArrayList<>();
+		
+		for(Conference someConference : conferences) {
+			for(Conference otherConference : conferences) {
+				if(conferencesToRemoveAfterwards.stream().anyMatch(conf -> conf.isParallelWith(otherConference))) {
+					continue;
+				}
+				
+				if(!someConference.doTeachersIntersectWith(otherConference)) {
+					System.out.println("The sets of teachers in conferences " + someConference.getName() + " and " + otherConference.getName() + " are disjunctive.");
+					someConference.setParallelConference(otherConference);
+					conferencesToRemoveAfterwards.add(otherConference);
+				}
+				
+			}
+		}
+		
+		this.conferences.removeAll(conferencesToRemoveAfterwards);
+		
+		return conferencesToRemoveAfterwards.size() > 0;
+	}
 
 	/**
 	 * Optimises the order of conferences by sorting them stably according to 1. the
@@ -35,10 +58,10 @@ public class Schedule {
 	 * this optimised order. The optimised list can be retrieved via the
 	 * corresponding getter.
 	 */
-	public void optimizeOrder() {
+	public void optimizeOrder() {		
 		conferences = (ArrayList<Conference>) conferences.stream()
-				.sorted((c1, c2) -> (int) (c1.getTeacherConferenceScore() - c2.getTeacherConferenceScore()))
-				.sorted((c1, c2) -> c2.getAssignedTeachersNum() - c1.getAssignedTeachersNum())
+				.sorted((c1, c2) -> (int) (c1.getTeacherConferenceScoreParallel() - c2.getTeacherConferenceScoreParallel()))
+				.sorted((c1, c2) -> c2.getAssignedTeachersNumParallel() - c1.getAssignedTeachersNumParallel())
 				.collect(Collectors.toList());
 	}
 

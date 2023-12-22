@@ -5,14 +5,13 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 import eu.ajg.csc.io.InputReader;
-import eu.ajg.csc.model.Conference;
 import eu.ajg.csc.model.Schedule;
 
 public class StartConferenceScheduleCalculator {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException {
 		System.out.println("=== Conference Order Optimizer ===");
-		System.out.println("Version: 1.0.0 (23.10.2023)       \n");
+		System.out.println("Version: 1.1.0 (22.12.2023)       \n");
 		
 		// Check input
 		if(!checkInput(args)) {
@@ -28,16 +27,28 @@ public class StartConferenceScheduleCalculator {
 		schedule.optimizeOrder();
 		
 		// Print output
+		System.out.println("== Optimal conference order ==");
 		for(int i = 0; i < schedule.getConferences().size(); i++) {
-			Conference conf = schedule.getConferences().get(i);
-			int numTeachers = conf.getAssignedTeachersNum();
-			double avgConfsPerTeacher = (double) conf.getTeacherConferenceScore() / (double) conf.getAssignedTeachersNum();
-			System.out.println((i+1) + ". " + conf.getName() + " (" + numTeachers + " teachers, " + avgConfsPerTeacher + " conferences per teacher (avg.))");
+			System.out.println((i+1) + ". " + schedule.getConferences().get(i));
 		}
 		
 		// Print time statistics
 		double timeDiff = (System.nanoTime() - timeStart) / 1E6;
-		System.out.println("\n\nFound best 1 of " + factorial(schedule.getConferences().size()) + " possible solutions in " + new DecimalFormat("##.##").format(timeDiff) + " ms");
+		System.out.println("\nFound best 1 of " + factorial(schedule.getConferences().size()) + " possible solutions in " + new DecimalFormat("##.##").format(timeDiff) + " ms");
+		
+		// Find parallelizable conferences
+		System.out.println("\nChecking for possible parallelization of conferences...");
+		if(schedule.parallelizeConferences()) {
+			schedule.optimizeOrder();
+			
+			// Print output
+			System.out.println("\n== Optimal conference order with parallel conferences ==");
+			for(int i = 0; i < schedule.getConferences().size(); i++) {
+				System.out.println((i+1) + ". " + schedule.getConferences().get(i));
+			}
+		} else {
+			System.out.println("Parallelization not possible.");
+		}
 	}
 	
 	private static boolean checkInput(String[] args) {
