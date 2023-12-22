@@ -5,6 +5,26 @@ DE: Berechnet eine optimierte Reihenfolge von Zeugniskonferenzen mehrerer Klasse
 
 ## Example
 ### Input
-![Screenshot1](https://github.com/DeBukkIt/Teachers-Conference-Schedule-Calculator/assets/1151380/10e95a1c-1b17-4c93-9e0f-ff02c7a21b9d)
+![grafik](https://github.com/DeBukkIt/Teachers-Conference-Schedule-Calculator/assets/1151380/9e1984c4-b258-48ad-ae6c-39790d23ad01)
+
 ### Output
-![Screenshot2](https://github.com/DeBukkIt/Teachers-Conference-Schedule-Calculator/assets/1151380/b243181d-0a00-4264-b286-20c8b28a07d6)
+```
+=== Conference Order Optimizer ===
+Version: 1.1.0 (22.12.2023)       
+
+== Optimal conference order ==
+1. ["Class C", 5 teachers]
+2. ["Class A", 4 teachers]
+3. ["Class D", 2 teachers]
+4. ["Class B", 2 teachers]
+
+Found best 1 of 24 possible solutions in 30,95 ms
+
+Checking for possible parallelization of conferences...
+The sets of teachers in conferences Class D and Class B are disjunctive.
+
+== Optimal conference order with parallel conferences ==
+1. ["Class C", 5 teachers]
+2. ["Class A", 4 teachers]
+3. ["Class D", 2 teachers || "Class B", 2 teachers]
+```
