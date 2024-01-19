@@ -34,7 +34,12 @@ public class StartConferenceScheduleCalculator {
 		
 		// Print time statistics
 		double timeDiff = (System.nanoTime() - timeStart) / 1E6;
-		System.out.println("\nFound best 1 of " + factorial(schedule.getConferences().size()) + " possible solutions in " + new DecimalFormat("##.##").format(timeDiff) + " ms");
+		long fac = factorial(schedule.getConferences().size());
+		if(fac < 0) {
+			System.out.println("\nFound best 1 of " + schedule.getConferences().size() + "! possible solutions in " + new DecimalFormat("##.##").format(timeDiff) + " ms");
+		} else {
+			System.out.println("\nFound best 1 of " + fac + " possible solutions in " + new DecimalFormat("##.##").format(timeDiff) + " ms");
+		}
 		
 		// Find parallelizable conferences
 		System.out.println("\nChecking for possible parallelization of conferences...");
@@ -49,6 +54,10 @@ public class StartConferenceScheduleCalculator {
 		} else {
 			System.out.println("Parallelization not possible.");
 		}
+		
+		// Calculate comparison
+		ConferenceComparator confComp = new ConferenceComparator(inputReader.readInput(), schedule);
+		System.out.println("\n" + confComp.toString());
 	}
 	
 	private static boolean checkInput(String[] args) {

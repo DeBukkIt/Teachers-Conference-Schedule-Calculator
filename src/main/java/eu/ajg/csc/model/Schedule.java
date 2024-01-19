@@ -31,12 +31,15 @@ public class Schedule {
 		ArrayList<Conference> conferencesToRemoveAfterwards = new ArrayList<>();
 		
 		for(Conference someConference : conferences) {
-			for(Conference otherConference : conferences) {
-				if(conferencesToRemoveAfterwards.stream().anyMatch(conf -> conf.isParallelWith(otherConference))) {
+			if(someConference.hasParallelConference()) {
+				continue;
+			}
+			for(Conference otherConference : conferences) {				
+				if(otherConference.hasParallelConference()) {
 					continue;
 				}
 				
-				if(!someConference.doTeachersIntersectWith(otherConference)) {
+				if(!someConference.doTeachersIntersectWith(otherConference)) {					
 					System.out.println("The sets of teachers in conferences " + someConference.getName() + " and " + otherConference.getName() + " are disjunctive.");
 					someConference.setParallelConference(otherConference);
 					conferencesToRemoveAfterwards.add(otherConference);
