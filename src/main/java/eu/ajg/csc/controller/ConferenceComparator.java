@@ -41,6 +41,7 @@ public class ConferenceComparator {
 	private int calculateWorkingHours(Schedule schedule) {		
 		Set<Teacher> teachers = new HashSet<>();
 		schedule.getConferences().stream().forEach(c -> teachers.addAll(c.getAssignedTeachers()));
+		schedule.getConferences().stream().filter(c -> c.hasParallelConference()).forEach(c -> teachers.addAll(c.getParallelConference().getAssignedTeachers()));
 		
 		numTeachers = teachers.size();
 		
@@ -49,13 +50,13 @@ public class ConferenceComparator {
 			_INNER:
 			for(int i = schedule.getConferences().size() - 1; i >= 0; i--) {
 				if(t.isConferenceAssigned(schedule.getConferences().get(i))) {
-					lastConferenceIndexSum = i;
+					lastConferenceIndexSum += i;
 					break _INNER;
 				}
 			}
 		}
 		
-		return teachers.size() * lastConferenceIndexSum * MINUTES_PER_CONFERENCE;
+		return lastConferenceIndexSum * MINUTES_PER_CONFERENCE;
 	}
 	
 	@Override
@@ -64,10 +65,10 @@ public class ConferenceComparator {
 		float optimalTime = (float) calculateWorkingHours(optimizedSchedule)/60.0f;
 		float timeDiff = originalTime - optimalTime;
 		float timeDiffPerTeacher = timeDiff/numTeachers;
-		
+		 
 		 return "Not optimized: " + originalTime + " teacher-hours\n"
 	          + "Optimized:     " + optimalTime  + " teacher-hours\n"
-	          + "that's         " + timeDiffPerTeacher + " hours (" + Math.round(timeDiffPerTeacher*60) + " min) per teacher on average";
+	          + "Difference:    " + timeDiffPerTeacher + " hours (" + Math.round(timeDiffPerTeacher*60) + " min) per teacher on average";
 	}
 	
 }

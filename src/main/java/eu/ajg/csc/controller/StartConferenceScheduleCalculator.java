@@ -11,7 +11,7 @@ public class StartConferenceScheduleCalculator {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException {
 		System.out.println("=== Conference Order Optimizer ===");
-		System.out.println("Version: 1.1.0 (22.12.2023)       \n");
+		System.out.println("Version: 1.2.0 (21.01.2024)       \n");
 		
 		// Check input
 		if(!checkInput(args)) {
@@ -31,6 +31,10 @@ public class StartConferenceScheduleCalculator {
 		for(int i = 0; i < schedule.getConferences().size(); i++) {
 			System.out.println((i+1) + ". " + schedule.getConferences().get(i));
 		}
+		
+		// Calculate comparison (1/2)
+		ConferenceComparator confComp = new ConferenceComparator(inputReader.readInput(), schedule);
+		System.out.println("\n" + confComp.toString());
 		
 		// Print time statistics
 		double timeDiff = (System.nanoTime() - timeStart) / 1E6;
@@ -55,8 +59,8 @@ public class StartConferenceScheduleCalculator {
 			System.out.println("Parallelization not possible.");
 		}
 		
-		// Calculate comparison
-		ConferenceComparator confComp = new ConferenceComparator(inputReader.readInput(), schedule);
+		// Calculate comparison (2/2)
+		confComp = new ConferenceComparator(inputReader.readInput(), schedule);
 		System.out.println("\n" + confComp.toString());
 	}
 	
